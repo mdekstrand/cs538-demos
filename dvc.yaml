@@ -1,0 +1,14 @@
+stages:
+  run-pop:
+    cmd: python run-algo.py POP
+    deps:
+    - data/ml-20m-split
+    outs:
+    - recs/POP
+
+  run-bias:
+    cmd: python run-algo.py BIAS
+    deps:
+    - data/ml-20m-split
+    outs:
+    - recs/BIAS

@@ -1,0 +1,26 @@
+schema: '2.0'
+stages:
+  run-bias:
+    cmd: python run-algo.py BIAS
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/BIAS
+      md5: d1508298e91a73e355ce704f51eda64a.dir
+      size: 2676225
+      nfiles: 5
+  run-pop:
+    cmd: python run-algo.py POP
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/POP
+      md5: c24cbfdf1708e33fab42b96aff3539c1.dir
+      size: 4765172
+      nfiles: 5

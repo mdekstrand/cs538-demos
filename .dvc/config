@@ -1,0 +1,7 @@
+[core]
+    remote = abyss
+['remote "abyss"']
+    url = s3://cs538-demos
+    endpointurl = https://abyss.boisestate.edu
+    region = garage
+    profile = cs538-data

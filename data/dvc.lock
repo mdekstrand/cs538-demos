@@ -1,0 +1,30 @@
+schema: '2.0'
+stages:
+  unzip-ml20m:
+    cmd: python -m zipfile -e ml-20m.zip .
+    deps:
+    - path: ml-20m.zip
+      md5: cd245b17a1ae2cc31bb14903e1204af3
+      size: 198702078
+    outs:
+    - path: ml-20m
+      md5: c330ca8a1a4009f53451a8aeaa325d91.dir
+      size: 875588784
+      nfiles: 7
+  split-ml20m:
+    cmd: python split-data.py --movielens ml-20m
+    deps:
+    - path: data/ml-20m/ratings.csv
+      md5: f95d275e0f2edad2391e5ef864a46628
+      size: 533444411
+    - path: split-data.py
+      md5: b21747f946e5d7144c4fdf9bf2f2d8e4
+      size: 1394
+    params:
+      params.yaml:
+        random.seed: 20230309
+    outs:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10

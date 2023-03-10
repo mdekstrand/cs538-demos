@@ -1,0 +1,17 @@
+stages:
+  unzip-ml20m:
+    cmd: python -m zipfile -e ml-20m.zip .
+    deps:
+    - ml-20m.zip
+    outs:
+    - ml-20m
+  split-ml20m:
+    cmd: python split-data.py --movielens ml-20m
+    wdir: ..
+    deps:
+    - data/ml-20m/ratings.csv
+    - split-data.py
+    params:
+    - random.seed
+    outs:
+    - data/ml-20m-split

@@ -277,17 +277,21 @@ class TorchMF(Predictor):
             self._opt = AdamW(self._model.parameters(), lr=self.lr, weight_decay=self.reg)
 
     def _finalize(self):
-        "Finalize model training, moving back to the CPU"
-        self._model = self._model.to('cpu')
+        "Finalize model training"
         # put model in evaluation mode
         self._model.eval()
-        del self._current_device
 
     def _cleanup(self):
         "Clean up data not needed after training"
         del self._data
         del self._loss, self._opt
         del self._rng
+    
+    def to(self, device):
+        "Move the model to a different device."
+        self._model.to(device)
+        self._current_device = device
+        return self
 
     def _fit_iter(self):
         """
@@ -331,14 +335,15 @@ class TorchMF(Predictor):
 
         # convert user and items into rows and columns
         u_row = self.user_index_.get_loc(user)
+        u_tensor = torch.IntTensor([u_row])
+        
         i_cols = self.item_index_.get_indexer(items)
         # unknown items will have column -1 - limit to the
         # ones we know, and remember which item IDs those are
         scorable = items[i_cols >= 0]
         i_cols = i_cols[i_cols >= 0]
-
-        u_tensor = torch.IntTensor([u_row])
         i_tensor = torch.from_numpy(i_cols)
+
         if self._current_device:
             u_tensor = u_tensor.to(self._current_device)
             i_tensor = i_tensor.to(self._current_device)
@@ -362,6 +367,9 @@ class TorchMF(Predictor):
         if '_model' in state:
             del state['_model']
             state['_model_weights_'] = self._model.state_dict()
+        if '_current_device' in state:
+            # we always go back to CPU in pickling
+            del state['_current_device']
 
         return state
 

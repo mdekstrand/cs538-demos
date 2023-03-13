@@ -178,16 +178,20 @@ class TorchImplicitMFUserMSE(Predictor):
             self._opt = AdamW(self._model.parameters(), lr=self.lr, weight_decay=self.reg)
 
     def _finalize(self):
-        "Finalize model training, moving back to the CPU"
-        self._model = self._model.to('cpu')
+        "Finalize model training"
         # set the model in evaluation mode (not training)
         self._model.eval()
-        del self._current_device
 
     def _cleanup(self):
         "Clean up data not needed after training"
         del self._loss, self._opt
         del self._rng
+
+    def to(self, device):
+        "Move the model to a different device."
+        self._model.to(device)
+        self._current_device = device
+        return self
 
     def _fit_iter(self):
         """
@@ -281,6 +285,9 @@ class TorchImplicitMFUserMSE(Predictor):
         if '_model' in state:
             del state['_model']
             state['_model_weights_'] = self._model.state_dict()
+        if '_current_device' in state:
+            # we always go back to CPU in pickling
+            del state['_current_device']
 
         return state
 

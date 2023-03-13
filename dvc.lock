@@ -149,7 +149,8 @@ stages:
       size: 102719
       nfiles: 5
   run-torchmf@ml-latest-small:
-    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small TorchMF
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small -j 1
+      TorchMF
     deps:
     - path: data/ml-latest-small-split
       md5: 80a2dd7a24400ecc193edda5e350054d.dir
@@ -157,10 +158,10 @@ stages:
       nfiles: 10
     outs:
     - path: preds/ml-latest-small-TorchMF
-      md5: b0356e9fe6335cd7245596efd9952d27.dir
+      md5: 609115a2236626ece22c2958c773e81d.dir
       size: 69442
       nfiles: 5
     - path: recs/ml-latest-small-TorchMF
-      md5: c0e7c4aaabc6a4408141b79f63c9a98e.dir
-      size: 103862
+      md5: fe343ff7e589dd332d965b7dfa1b05de.dir
+      size: 103908
       nfiles: 5

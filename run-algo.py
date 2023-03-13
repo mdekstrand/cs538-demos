@@ -9,6 +9,8 @@ Options:
         Use data in DIR [default: data/ml-20m-split].
     -p PFX, --prefix=PREFIX
         Prefix output dirs with PFX.
+    -j N, --procs N
+        Use N processes for prediction / recommendation.
     -v, --verbose
         Use verbose logging
     --first-part N
@@ -46,7 +48,7 @@ def run_algo(name, pfx, train, test, i):
 
     if name in pred_algos:
         _log.info('generating predictions')
-        preds = predict(algo, test)
+        preds = predict(algo, test, n_jobs=n_jobs)
         err = rmse(preds['prediction'], preds['rating'])
         _log.info('finished with RMSE %4f', err)
         pred_dir = pred_base / dname
@@ -54,13 +56,14 @@ def run_algo(name, pfx, train, test, i):
         preds.to_parquet(pred_dir / f'part{i}-preds.parquet', index=False)
 
     _log.info('generating recommendations')
-    recs = recommend(algo, test['user'].unique(), 20)
+    recs = recommend(algo, test['user'].unique(), 20, n_jobs=n_jobs)
     rec_dir = rec_base / dname
     rec_dir.mkdir(parents=True, exist_ok=True)
     recs.to_parquet(rec_dir / f'part{i}-recs.parquet', index=False)
 
 
 def main():
+    global n_jobs
     opts = docopt(__doc__)
     # initialize logging
     level = logging.DEBUG if opts['--verbose'] else logging.INFO
@@ -70,6 +73,7 @@ def main():
 
     data = opts['--data']
     start = int(opts['--first-part'])
+    n_jobs = int(opts['--procs'])
 
     for i in range(start, 6):
         train = pd.read_parquet(f'{data}/part{i}-train.parquet')

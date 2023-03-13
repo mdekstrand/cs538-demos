@@ -146,9 +146,9 @@ class MFNet(nn.Module):
         # both have length B
 
         # look up biases and embeddings
-        # reshape converts arrays of shape (B, 1) to shape B
-        ub = self.u_bias(user).reshape(-1)
-        ib = self.i_bias(item).reshape(-1)
+        # biases have dimension (N, 1); remove the 1 by reshaping to match user/item inputs
+        ub = self.u_bias(user).reshape(user.shape)
+        ib = self.i_bias(item).reshape(item.shape)
 
         uvec = self.u_embed(user)
         ivec = self.i_embed(item)

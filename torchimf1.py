@@ -153,7 +153,9 @@ class MFNet(nn.Module):
         ib = self.i_bias(item).reshape(item.shape)
 
         uvec = self.u_embed(user)
+        _log.debug('uvec shape: %s', uvec.shape)
         ivec = self.i_embed(item)
+        _log.debug('ivec shape: %s', ivec.shape)
 
         # compute the inner product
         ips = vecdot(uvec, ivec)
@@ -173,7 +175,7 @@ class TorchImplicitMFUserMSE(Predictor):
     _device = None
     _train_dev = None
 
-    def __init__(self, n_features, *, confweight=40, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
+    def __init__(self, n_features, *, confweight=40, batch_size=8, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
         """
         Initialize the Torch MF predictor.
 
@@ -182,6 +184,8 @@ class TorchImplicitMFUserMSE(Predictor):
                 The number of latent features (embedding size).
             confweight(float):
                 The confidence weight for implicit feedback.
+            batch_size(int):
+                The number of users to use in each training batch.
             lr(float):
                 The learning rate.
             reg(float):
@@ -193,6 +197,7 @@ class TorchImplicitMFUserMSE(Predictor):
         """
         self.n_features = n_features
         self.confweight = confweight
+        self.batch_size = batch_size
         self.lr = lr
         self.epochs = epochs
         self.reg = reg
@@ -268,23 +273,38 @@ class TorchImplicitMFUserMSE(Predictor):
         Run one iteration of the recommender training.
         """
         # permute the training data - a permutation over users
-        epoch_perm = self._rng.permutation(self.matrix_.nrows)
+        nusers = self.matrix_.nrows
+        epoch_perm = self._rng.permutation(nusers)
+        bc = math.ceil(nusers / self.batch_size)
+        # we use the same item vector for each iteration - allocate ocne
+        # this is going to be a matrix: one row for each batch element, col for each item
+        # we set up the first row, and then we repeat it
+        # play with this code in a python terminal to see how the sizes work
+        iv = np.arange(self.matrix_.ncols, dtype='i4')
+        iv = np.repeat(iv.reshape((1, -1)), self.batch_size, axis=0)
+        ivt = torch.from_numpy(iv).to(self._train_dev)
         # set up a progress bar
-        loop = tqdm(range(self.matrix_.nrows))
+        loop = tqdm(range(bc))
         for i in loop:
             # create input tensors from the data
-            row = epoch_perm[i]
-            uv = torch.IntTensor([row])
-            iv = torch.arange(self.matrix_.ncols, dtype=torch.int32)
-            rv = torch.zeros(len(iv))
-            rv[self.matrix_.row_cs(row)] = self.confweight
+            bs = i * self.batch_size
+            be = min(bs + self.batch_size, nusers)
+            rows = epoch_perm[bs:be]
+            if len(rows) < self.batch_size:
+                iv = iv[:len(rows), :]
+                ivt = torch.from_numpy(iv).to(self._train_dev)
+            # convert rows to tensor, and reshape
+            # (B, 1) will broadcast with the (B, |I|) item index vector
+            uv = torch.IntTensor(rows).reshape((-1, 1))
+            rv = torch.zeros_like(ivt, dtype=torch.float32)
+            for j, row in enumerate(rows):
+                rv[j, self.matrix_.row_cs(row)] = self.confweight
 
             uv = uv.to(self._train_dev)
-            iv = iv.to(self._train_dev)
             rv = rv.to(self._train_dev)
 
             # compute scores and loss
-            pred = self._model(uv, iv)
+            pred = self._model(uv, ivt)
             loss = self._loss(pred, rv)
 
             # update model
@@ -292,7 +312,7 @@ class TorchImplicitMFUserMSE(Predictor):
             loss.backward()
             self._opt.step()
 
-            _log.debug('user %d has loss %s', row, loss.item())
+            _log.debug('batch %d has loss %s', i, loss.item())
         
         loop.clear()
         

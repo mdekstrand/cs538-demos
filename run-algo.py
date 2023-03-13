@@ -73,7 +73,9 @@ def main():
 
     data = opts['--data']
     start = int(opts['--first-part'])
-    n_jobs = int(opts['--procs'])
+    n_jobs = opts['--procs']
+    if n_jobs:
+        n_jobs = int(n_jobs)
 
     for i in range(start, 6):
         train = pd.read_parquet(f'{data}/part{i}-train.parquet')

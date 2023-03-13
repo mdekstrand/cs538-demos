@@ -89,8 +89,8 @@ class TorchImplicitMFUserMSE(Predictor):
     Implementation of explicit-feedback MF in PyTorch.
     """
 
-    _device = None
-    _train_dev = None
+    _configured_device = None
+    _current_device = None
 
     def __init__(self, n_features, *, confweight=40, batch_size=8, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
         """
@@ -120,7 +120,7 @@ class TorchImplicitMFUserMSE(Predictor):
         self.reg = reg
         self.rng_spec = rng_spec
 
-        self._device = device
+        self._configured_device = device
 
     def fit(self, ratings, **kwargs):
         # run the iterations
@@ -129,7 +129,7 @@ class TorchImplicitMFUserMSE(Predictor):
         _log.info('[%s] preparing input data set', timer)
         self._prepare_data(ratings)
 
-        dev = self._device
+        dev = self._configured_device
         if dev is None:
             dev = 'cuda' if torch.cuda.is_available() else 'cpu'
         self._prepare_model(dev)
@@ -168,9 +168,11 @@ class TorchImplicitMFUserMSE(Predictor):
         self._model = model
         if train_dev:
             _log.info('preparing to train on %s', train_dev)
-            self._train_dev = train_dev
+            self._current_device = train_dev
             # move device to model
             self._model = model.to(train_dev)
+            # the model needs to be in training mode
+            self._model.train(True)
             # set up training features
             self._loss = nn.MSELoss()
             self._opt = AdamW(self._model.parameters(), lr=self.lr, weight_decay=self.reg)
@@ -178,7 +180,9 @@ class TorchImplicitMFUserMSE(Predictor):
     def _finalize(self):
         "Finalize model training, moving back to the CPU"
         self._model = self._model.to('cpu')
-        del self._train_dev
+        # set the model in evaluation mode (not training)
+        self._model.eval()
+        del self._current_device
 
     def _cleanup(self):
         "Clean up data not needed after training"
@@ -199,7 +203,7 @@ class TorchImplicitMFUserMSE(Predictor):
         # play with this code in a python terminal to see how the sizes work
         iv = np.arange(self.matrix_.ncols, dtype='i4')
         iv = np.repeat(iv.reshape((1, -1)), self.batch_size, axis=0)
-        ivt = torch.from_numpy(iv).to(self._train_dev)
+        ivt = torch.from_numpy(iv).to(self._current_device)
         # set up a progress bar
         loop = tqdm(range(bc))
         for i in loop:
@@ -209,7 +213,7 @@ class TorchImplicitMFUserMSE(Predictor):
             rows = epoch_perm[bs:be]
             if len(rows) < self.batch_size:
                 iv = iv[:len(rows), :]
-                ivt = torch.from_numpy(iv).to(self._train_dev)
+                ivt = torch.from_numpy(iv).to(self._current_device)
             # convert rows to tensor, and reshape
             # (B, 1) will broadcast with the (B, |I|) item index vector
             uv = torch.IntTensor(rows).reshape((-1, 1))
@@ -217,8 +221,8 @@ class TorchImplicitMFUserMSE(Predictor):
             for j, row in enumerate(rows):
                 rv[j, self.matrix_.row_cs(row)] = self.confweight
 
-            uv = uv.to(self._train_dev)
-            rv = rv.to(self._train_dev)
+            uv = uv.to(self._current_device)
+            rv = rv.to(self._current_device)
 
             # compute scores and loss
             pred = self._model(uv, ivt)
@@ -260,7 +264,7 @@ class TorchImplicitMFUserMSE(Predictor):
             i_tensor = i_tensor.to(self._train_dev)
 
         # get scores
-        with torch.no_grad():
+        with torch.inference_mode():
             scores = self._model(u_tensor, i_tensor).to('cpu')
         
         # and we can finally put in a series to return
@@ -285,5 +289,6 @@ class TorchImplicitMFUserMSE(Predictor):
         if '_model_weights_' in state:
             self._prepare_model()
             self._model.load_state_dict(self._model_weights_)
+            # set the model in evaluation mode (not training)
             self._model.eval()
             del self._model_weights_

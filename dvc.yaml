@@ -55,3 +55,14 @@ stages:
       - data/${item}-split
       outs:
       - recs/${item}-LIFT
+
+  run-imf1:
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} TorchIMF1
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-TorchIMF1

@@ -112,3 +112,27 @@ stages:
       md5: 86607de27edab4be9967ec705bfa60ee.dir
       size: 167222
       nfiles: 5
+  run-imf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small I-MF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-I-MF
+      md5: 00004da8aff7c5157bb0422372377ca9.dir
+      size: 168750
+      nfiles: 5
+  run-imf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m I-MF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-I-MF
+      md5: 81b030257ac0098e0dcf26b60d1a67cc.dir
+      size: 29229459
+      nfiles: 5

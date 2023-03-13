@@ -292,9 +292,7 @@ class TorchImplicitMFUserMSE(Predictor):
             loss.backward()
             self._opt.step()
 
-            loop.set_postfix_str('loss: {:.3f}'.format(loss.item()))
-
-            _log.debug('batch %d has loss %s', i, loss.item())
+            _log.debug('user %d has loss %s', row, loss.item())
         
         loop.clear()
         

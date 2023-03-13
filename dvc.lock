@@ -48,3 +48,67 @@ stages:
       md5: c2e811ff2211b2e2895f5c06660d8081.dir
       size: 4765462
       nfiles: 5
+  run-bias@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m BIAS
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-BIAS
+      md5: 0fadbdcb0da031e6e4c33606914f9ea3.dir
+      size: 14608296
+      nfiles: 5
+    - path: recs/ml-20m-BIAS
+      md5: 63edd18a34ea8f23af05e002574017e2.dir
+      size: 2676515
+      nfiles: 5
+  run-bias@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small BIAS
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-BIAS
+      md5: 43d4afe5f1d4fa19505c5eecebd58be8.dir
+      size: 81883
+      nfiles: 5
+    - path: recs/ml-latest-small-BIAS
+      md5: 699eca084e96ce8302e8c3325b213ef6.dir
+      size: 27414
+      nfiles: 5
+  run-emf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m E-MF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-E-MF
+      md5: cc3783861ecae48d9f12a72c28800eaf.dir
+      size: 14664304
+      nfiles: 5
+    - path: recs/ml-20m-E-MF
+      md5: a8b071021b42c610cc9685d961362da3.dir
+      size: 29754666
+      nfiles: 5
+  run-emf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small E-MF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-E-MF
+      md5: 27a0cde5f90fc04bafe46507cebd2cfd.dir
+      size: 81690
+      nfiles: 5
+    - path: recs/ml-latest-small-E-MF
+      md5: 86607de27edab4be9967ec705bfa60ee.dir
+      size: 167222
+      nfiles: 5

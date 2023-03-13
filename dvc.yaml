@@ -27,12 +27,12 @@ stages:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} EMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item} E-MF
       deps:
       - data/${item}-split
       outs:
-      - preds/${item}-EMF
-      - recs/${item}-EMF
+      - preds/${item}-E-MF
+      - recs/${item}-E-MF
   
   run-imf:
     foreach:

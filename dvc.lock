@@ -136,3 +136,15 @@ stages:
       md5: 81b030257ac0098e0dcf26b60d1a67cc.dir
       size: 29229459
       nfiles: 5
+  run-imf1@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small TorchIMF1
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-TorchIMF1
+      md5: 231fc68a0b044ed05addc5ac56f135d8.dir
+      size: 102719
+      nfiles: 5

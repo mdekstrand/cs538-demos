@@ -1,4 +1,21 @@
 stages:
+  unzip-mlsmall:
+    cmd: python -m zipfile -e ml-latest-small.zip .
+    deps:
+    - ml-latest-small.zip
+    outs:
+    - ml-latest-small
+  split-mlsmall:
+    cmd: python split-data.py --movielens ml-latest-small
+    wdir: ..
+    deps:
+    - data/ml-latest-small/ratings.csv
+    - split-data.py
+    params:
+    - random.seed
+    outs:
+    - data/ml-latest-small-split
+
   unzip-ml20m:
     cmd: python -m zipfile -e ml-20m.zip .
     deps:

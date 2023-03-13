@@ -28,3 +28,31 @@ stages:
       md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
       size: 647220813
       nfiles: 10
+  unzip-mlsmall:
+    cmd: python -m zipfile -e ml-latest-small.zip .
+    deps:
+    - path: ml-latest-small.zip
+      md5: 31a303aabbc519bd33d025e44d6c2570
+      size: 978202
+    outs:
+    - path: ml-latest-small
+      md5: c4679a5c26767acd3f6d42cdf57bc0e7.dir
+      size: 3303135
+      nfiles: 5
+  split-mlsmall:
+    cmd: python split-data.py --movielens ml-latest-small
+    deps:
+    - path: data/ml-latest-small/ratings.csv
+      md5: ac0cf1d26aed3a5b6777a295231976ad
+      size: 2483723
+    - path: split-data.py
+      md5: b21747f946e5d7144c4fdf9bf2f2d8e4
+      size: 1394
+    params:
+      params.yaml:
+        random.seed: 20230309
+    outs:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10

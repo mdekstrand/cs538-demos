@@ -1,0 +1,10 @@
+md5: abd7e169ebf4808886ee842dd8128b7d
+frozen: true
+deps:
+- checksum: '"eed1a-598cfd387dc5a"'
+  size: 978202
+  path: https://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+outs:
+- md5: 31a303aabbc519bd33d025e44d6c2570
+  size: 978202
+  path: ml-latest-small.zip

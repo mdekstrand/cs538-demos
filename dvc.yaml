@@ -1,37 +1,57 @@
 stages:
   run-pop:
-    cmd: python run-algo.py -p ml-20m POP
-    deps:
-    - data/ml-20m-split
-    outs:
-    - recs/ml-20m-POP
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} POP
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-POP
 
   run-bias:
-    cmd: python run-algo.py -p ml-20m BIAS
-    deps:
-    - data/ml-20m-split
-    outs:
-    - preds/ml-20m-BIAS
-    - recs/ml-20m-BIAS
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} BIAS
+      deps:
+      - data/${item}-split
+      outs:
+      - preds/${item}-BIAS
+      - recs/${item}-BIAS
 
   run-emf:
-    cmd: python run-algo.py -p ml-20m EMF
-    deps:
-    - data/ml-20m-split
-    outs:
-    - preds/ml-20m-EMF
-    - recs/ml-20m-EMF
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} EMF
+      deps:
+      - data/${item}-split
+      outs:
+      - preds/${item}-EMF
+      - recs/${item}-EMF
   
   run-imf:
-    cmd: python run-algo.py -p ml-20m I-MF
-    deps:
-    - data/ml-20m-split
-    outs:
-    - recs/ml-20m-I-MF
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} I-MF
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-I-MF
   
   run-lift:
-    cmd: python run-algo.py -p ml-20m LIFT
-    deps:
-    - data/ml-20m-split
-    outs:
-    - recs/ml-20m-LIFT
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} LIFT
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-LIFT

@@ -24,3 +24,15 @@ stages:
       md5: c24cbfdf1708e33fab42b96aff3539c1.dir
       size: 4765172
       nfiles: 5
+  run-pop@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small POP
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-POP
+      md5: e08fb1e012ac3111a0db527a9ec2817e.dir
+      size: 41041
+      nfiles: 5

@@ -147,20 +147,24 @@ class MFNet(nn.Module):
 
         # look up biases and embeddings
         # biases have dimension (N, 1); remove the 1 by reshaping to match user/item inputs
+        _log.debug('user shape: %s', user.shape)
+        _log.debug('item shape: %s', item.shape)
         ub = self.u_bias(user).reshape(user.shape)
         ib = self.i_bias(item).reshape(item.shape)
 
         uvec = self.u_embed(user)
         ivec = self.i_embed(item)
+        _log.debug('uvec shape: %s', uvec.shape)
+        _log.debug('ivec shape: %s', ivec.shape)
 
         # compute the inner product
         ips = vecdot(uvec, ivec)
 
         # compute final score
         score = ub + ib + ips
-        
+
+        _log.debug('score shape: %s', score.shape)
         # we're done
-        assert score.shape == user.shape
         return score
 
 
@@ -329,7 +333,7 @@ class TorchMF(Predictor):
         scorable = items[i_cols >= 0]
         i_cols = i_cols[i_cols >= 0]
 
-        u_tensor = torch.from_numpy(np.repeat(u_row, len(i_cols)))
+        u_tensor = torch.IntTensor([u_row])
         i_tensor = torch.from_numpy(i_cols)
         if self._train_dev:
             u_tensor = u_tensor.to(self._train_dev)

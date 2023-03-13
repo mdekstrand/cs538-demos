@@ -28,89 +28,6 @@ from lenskit.algorithms.bias import Bias
 _log = logging.getLogger(__name__)
 
 
-class MFBatch(NamedTuple):
-    "Representation of a single batch"
-    users: torch.Tensor
-    items: torch.Tensor
-    rates: torch.Tensor
-
-    def to(self, dev):
-        "move this batch to a device"
-        return self._replace(**{
-            n: v.to(dev)
-            for (n, v) in self._asdict().items()
-        })
-
-
-@dataclass
-class MFEpochData:
-    """
-    Permuted data for a single epoch, already moved to Torch.
-    """
-
-    data: object
-    permutation: np.ndarray
-    t_users: torch.Tensor
-    t_items: torch.Tensor
-    t_rates: torch.Tensor
-
-    @property
-    def n_samples(self):
-        return self.data.n_samples
-
-    @property
-    def batch_size(self):
-        return self.data.batch_size
-
-    @property
-    def batch_count(self):
-        return math.ceil(self.n_samples / self.batch_size)
-
-    def batch(self, num) -> MFBatch:
-        start = num * self.batch_size
-        end = min(start + self.batch_size, self.n_samples)
-        rows = self.permutation[start:end]
-        ut = self.t_users[rows]
-        it = self.t_items[rows]
-        rt = self.t_rates[rows]
-        return MFBatch(ut, it, rt)
-
-
-@dataclass
-class MFTrainData:
-    """
-    Class capturing MF training data/context
-    """
-
-    users: pd.Index
-    items: pd.Index
-
-    r_users: np.ndarray
-    r_items: np.ndarray
-    r_rates: np.ndarray
-
-    batch_size: int
-
-    @property
-    def n_samples(self):
-        return len(self.r_users)
-
-    @property
-    def n_users(self):
-        return len(self.users)
-    
-    @property
-    def n_items(self):
-        return len(self.items)
-
-    def for_epoch(self, rng: np.random.Generator) -> MFEpochData:
-        perm = rng.permutation(self.n_samples)
-        ut = torch.from_numpy(self.r_users)
-        it = torch.from_numpy(self.r_items)
-        rt = torch.from_numpy(self.r_rates)
-        return MFEpochData(self, perm, ut, it, rt)
-
-
 class MFNet(nn.Module):
     """
     Torch module that defines the matrix factorization model.
@@ -336,7 +253,7 @@ class TorchImplicitMFUserMSE(Predictor):
         scorable = items[i_cols >= 0]
         i_cols = i_cols[i_cols >= 0]
 
-        u_tensor = torch.from_numpy(np.repeat(u_row, len(i_cols)))
+        u_tensor = torch.IntTensor([u_row])
         i_tensor = torch.from_numpy(i_cols)
         if self._train_dev:
             u_tensor = u_tensor.to(self._train_dev)

@@ -11,7 +11,7 @@ algorithms = {
     'SVD': svd.BiasedSVD(25),
     'I-MF': als.ImplicitMF(50),
     'TorchMF': torchmf.TorchMF(50, reg=0.01),
-    'Lift': lift.Lift(),
+    'LIFT': lift.Lift(),
 }
 
 pred_algos = ['BIAS', 'U-KNN', 'I-KNN', 'E-MF', 'SVD', 'TorchMF']

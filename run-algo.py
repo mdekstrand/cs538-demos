@@ -7,6 +7,8 @@ Usage:
 Options:
     -d DIR, --data=DIR
         Use data in DIR [default: data/ml-20m-split].
+    -p PFX, --prefix=PREFIX
+        Prefix output dirs with PFX.
     -v, --verbose
         Use verbose logging
     --first-part N
@@ -32,7 +34,7 @@ pred_base = Path('preds')
 rec_base = Path('recs')
 
 
-def run_algo(name, train, test, i):
+def run_algo(name, pfx, train, test, i):
     algo = algorithms[name]
     # make a recommender
     algo = Recommender.adapt(algo)
@@ -40,18 +42,20 @@ def run_algo(name, train, test, i):
     _log.info('training %s', name)
     algo.fit(train)
 
+    dname = f'{pfx}-{name}' if pfx else name
+
     if name in pred_algos:
         _log.info('generating predictions')
         preds = predict(algo, test)
         err = rmse(preds['prediction'], preds['rating'])
         _log.info('finished with RMSE %4f', err)
-        pred_dir = pred_base / name
+        pred_dir = pred_base / dname
         pred_dir.mkdir(parents=True, exist_ok=True)
         preds.to_parquet(pred_dir / f'part{i}-preds.parquet', index=False)
 
     _log.info('generating recommendations')
     recs = recommend(algo, test['user'].unique(), 20)
-    rec_dir = rec_base / name
+    rec_dir = rec_base / dname
     rec_dir.mkdir(parents=True, exist_ok=True)
     recs.to_parquet(rec_dir / f'part{i}-recs.parquet', index=False)
 
@@ -71,7 +75,7 @@ def main():
         train = pd.read_parquet(f'{data}/part{i}-train.parquet')
         test = pd.read_parquet(f'{data}/part{i}-test.parquet')
         for algo in opts['ALGO']:
-            run_algo(algo, train, test, i)
+            run_algo(algo, opts['--prefix'], train, test, i)
 
 
 if __name__ == '__main__':

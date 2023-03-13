@@ -1,14 +1,37 @@
 stages:
   run-pop:
-    cmd: python run-algo.py POP
+    cmd: python run-algo.py -p ml-20m POP
     deps:
     - data/ml-20m-split
     outs:
-    - recs/POP
+    - recs/ml-20m-POP
 
   run-bias:
-    cmd: python run-algo.py BIAS
+    cmd: python run-algo.py -p ml-20m BIAS
     deps:
     - data/ml-20m-split
     outs:
-    - recs/BIAS
+    - preds/ml-20m-BIAS
+    - recs/ml-20m-BIAS
+
+  run-emf:
+    cmd: python run-algo.py -p ml-20m EMF
+    deps:
+    - data/ml-20m-split
+    outs:
+    - preds/ml-20m-EMF
+    - recs/ml-20m-EMF
+  
+  run-imf:
+    cmd: python run-algo.py -p ml-20m I-MF
+    deps:
+    - data/ml-20m-split
+    outs:
+    - recs/ml-20m-I-MF
+  
+  run-lift:
+    cmd: python run-algo.py -p ml-20m LIFT
+    deps:
+    - data/ml-20m-split
+    outs:
+    - recs/ml-20m-LIFT

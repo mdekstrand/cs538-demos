@@ -263,9 +263,9 @@ class TorchImplicitMFUserMSE(Predictor):
 
         u_tensor = torch.IntTensor([u_row])
         i_tensor = torch.from_numpy(i_cols)
-        if self._train_dev:
-            u_tensor = u_tensor.to(self._train_dev)
-            i_tensor = i_tensor.to(self._train_dev)
+        if self._current_device:
+            u_tensor = u_tensor.to(self._current_device)
+            i_tensor = i_tensor.to(self._current_device)
 
         # get scores
         with torch.inference_mode():

@@ -16,6 +16,7 @@ import torch
 from torch import nn
 from torch.optim import SGD, AdamW
 from torch.utils.data import TensorDataset, DataLoader
+import torch.nn.functional as F
 from torch.linalg import vecdot
 
 import seedbank
@@ -80,8 +81,8 @@ class MFNet(nn.Module):
         # compute final score
         score = ub + ib + ips
         
-        # we're done
-        return torch.sigmoid(score)
+        # we're done - return the log-odds (inner score)
+        return score
 
 
 class TorchLogisticMF(Predictor):
@@ -234,10 +235,11 @@ class TorchLogisticMF(Predictor):
 
             # compute scores and loss
             pred = self._model(uv, ivt)
-            # preds are prob. of 1 for each item
+            # preds are log odds of 1 for each item
             # need: log prob 0, log prob 1
-            lprob1 = torch.log(pred)
-            lprob0 = torch.log(1 - pred)
+            # compute: logsigmoid of score/pred
+            lprob1 = F.logsigmoid(pred)
+            lprob0 = F.logsigmoid(-pred)
             lprob = torch.concat([lprob0, lprob1], axis=1)
             _log.debug('lprob shape: %s', lprob.shape)
             loss = self._loss(lprob, rv.reshape((cur_size, -1)).to(torch.long))

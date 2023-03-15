@@ -1,12 +1,4 @@
 /BIAS
 /POP
-/ml-latest-small-POP
-/ml-20m-POP
-/ml-20m-BIAS
-/ml-latest-small-BIAS
-/ml-20m-E-MF
-/ml-latest-small-E-MF
-/ml-latest-small-I-MF
-/ml-20m-I-MF
-/ml-latest-small-TorchIMF1
-/ml-latest-small-TorchMF
+/ml-20m-*
+/ml-latest-small-*

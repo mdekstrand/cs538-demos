@@ -204,3 +204,15 @@ stages:
       md5: 435976fd3a32e9cf55eb5be437b6da9b.dir
       size: 19776725
       nfiles: 5
+  run-imf1@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m TorchIMF1
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-TorchIMF1
+      md5: 3aac7b49ed4101e7a241da64eca912f0.dir
+      size: 18739276
+      nfiles: 5

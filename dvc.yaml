@@ -101,7 +101,7 @@ stages:
       outs:
       - recs/${item}-SampLMF
   
-  run-samp-bpr:
+  run-bpr:
     foreach:
     - ml-latest-small
     - ml-20m

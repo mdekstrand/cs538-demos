@@ -225,8 +225,8 @@ stages:
       nfiles: 10
     outs:
     - path: recs/ml-latest-small-BPR
-      md5: 9f5af3e9c62c52bddfb253fc98667da8.dir
-      size: 117127
+      md5: c38f4738d42404f9535d440b83851496.dir
+      size: 117173
       nfiles: 5
   run-samp-lmf@ml-latest-small:
     cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small SampLMF
@@ -250,4 +250,16 @@ stages:
     - path: recs/ml-20m-SampLMF
       md5: 0b14c15a1535db4acb012b3b4823bca7.dir
       size: 19434533
+      nfiles: 5
+  run-lmf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small TorchLMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-TorchLMF
+      md5: 810075adc686589941cdb389b8e623d0.dir
+      size: 103010
       nfiles: 5

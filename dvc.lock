@@ -237,8 +237,9 @@ stages:
       nfiles: 10
     outs:
     - path: recs/ml-latest-small-SampLMF
-      md5: 644ec00bab26104eaffd5e53a24d9e85.dir
-      size: 116909
+      md5: 172500cffbb0f1387984e795ef80a1d1.dir
+      size: 117330
+      nfiles: 5
   run-samp-lmf@ml-20m:
     cmd: python run-algo.py -d data/ml-20m-split -p ml-20m SampLMF
     deps:
@@ -262,4 +263,28 @@ stages:
     - path: recs/ml-latest-small-TorchLMF
       md5: 810075adc686589941cdb389b8e623d0.dir
       size: 103010
+      nfiles: 5
+  run-lmf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m TorchLMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-TorchLMF
+      md5: 389afb5dee5645e0183b79bc44a4e2b1.dir
+      size: 19094422
+      nfiles: 5
+  run-bpr@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m BPR
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-BPR
+      md5: 9807fb11d6769078c6fc2e3517449f79.dir
+      size: 19079181
       nfiles: 5

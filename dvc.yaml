@@ -78,3 +78,25 @@ stages:
       - data/${item}-split
       outs:
       - recs/${item}-TorchIMF1
+
+  run-lmf:
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} TorchLMF
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-TorchLMF
+    
+  run-samp-lmf:
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} SampLMF
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-SampLMF

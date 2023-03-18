@@ -1,5 +1,5 @@
 from lenskit.algorithms import basic, bias, user_knn, item_knn, als, svd
-import lift, torchmf, torchimf1, torchlmf
+import lift, torchmf, torchimf1, torchlmf, torchmfsamp
 
 algorithms = {
     'POP': basic.Popular(),
@@ -13,6 +13,7 @@ algorithms = {
     'TorchMF': torchmf.TorchMF(50, reg=0.01),
     'TorchIMF1': torchimf1.TorchImplicitMFUserMSE(50),
     'TorchLMF': torchlmf.TorchLogisticMF(50),
+    'SampLMF': torchmfsamp.TorchSampledMF(50),
     'LIFT': lift.Lift(),
 }
 

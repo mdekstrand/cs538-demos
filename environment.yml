@@ -1,4 +1,4 @@
-# environment version 7, updated Mar. 6, 2023
+# environment version 8, updated Mar. 18, 2023
 # note: pytorch is a relatively large download, at least on windows
 name: cs538
 channels:
@@ -20,6 +20,7 @@ dependencies:
 - matplotlib
 - seaborn
 - notebook
+- papermill
 - jupyterlab
 - ipywidgets
 - docopt

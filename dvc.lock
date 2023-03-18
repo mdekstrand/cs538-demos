@@ -228,3 +228,15 @@ stages:
       md5: 9f5af3e9c62c52bddfb253fc98667da8.dir
       size: 117127
       nfiles: 5
+  run-samp-lmf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small SampLMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-SampLMF
+      md5: 644ec00bab26104eaffd5e53a24d9e85.dir
+      size: 116909
+      nfiles: 5

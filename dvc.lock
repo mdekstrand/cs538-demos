@@ -239,4 +239,15 @@ stages:
     - path: recs/ml-latest-small-SampLMF
       md5: 644ec00bab26104eaffd5e53a24d9e85.dir
       size: 116909
+  run-samp-lmf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m SampLMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-SampLMF
+      md5: 0b14c15a1535db4acb012b3b4823bca7.dir
+      size: 19434533
       nfiles: 5

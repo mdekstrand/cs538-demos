@@ -14,6 +14,7 @@ algorithms = {
     'TorchIMF1': torchimf1.TorchImplicitMFUserMSE(50),
     'TorchLMF': torchlmf.TorchLogisticMF(50),
     'SampLMF': torchmfsamp.TorchSampledMF(50),
+    'BPR': torchmfsamp.TorchSampledMF(50, loss='bpr'),
     'LIFT': lift.Lift(),
 }
 

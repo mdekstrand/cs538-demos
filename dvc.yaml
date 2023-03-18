@@ -100,3 +100,14 @@ stages:
       - data/${item}-split
       outs:
       - recs/${item}-SampLMF
+  
+  run-samp-bpr:
+    foreach:
+    - ml-latest-small
+    - ml-20m
+    do:
+      cmd: python run-algo.py -d data/${item}-split -p ${item} BPR
+      deps:
+      - data/${item}-split
+      outs:
+      - recs/${item}-BPR

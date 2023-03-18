@@ -221,6 +221,37 @@ def loss_logistic(X: torch.Tensor):
     return Xnll.sum() / n
 
 
+def loss_bpr(X: torch.Tensor):
+    """
+    BPR loss function for paired predictions.
+
+    This loss function does not require a separate label tensor, because the
+    labels are implicit in the structure. :math:`X` has shape (B, 2), where
+    column 0 is scores for positive observations and column 1 is scores for
+    negative observations.
+
+    Args:
+        X(torch.Tensor):
+            A tensor of shape (B, 2) storing the prediction scores (in log
+            odds).
+    
+    Returns:
+        torch.Tensor:
+            A tensor of shape () with the negative log likelihood for the
+            prediction scores.
+    """
+    # For a pair (i, j), we have their scores in columns 0 and 1.
+    # The BPR scoring formula is the difference in these scores: i - j
+    Xscore = X[:, 0] - X[:, 1]
+    
+    # Now logsigmoid will convert that score to a log likelihood
+    Xnll = -F.logsigmoid(Xscore)
+
+    # And now we compute the mean of the negative log likelihoods for this batch
+    n = X.shape[0]
+    return Xnll.sum() / n
+
+
 class TorchSampledMF(Predictor):
     """
     Implementation of implicit-feedback matrix factorization with negative sampling.
@@ -231,15 +262,15 @@ class TorchSampledMF(Predictor):
     _data: Optional[MFTrainData]
     _model: Optional[MFNet]
 
-    def __init__(self, n_features, *, batch_size=8*1024, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
+    def __init__(self, n_features, *, loss='logistic', batch_size=8*1024, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
         """
         Initialize the Torch MF predictor.
 
         Args:
             n_features(int):
                 The number of latent features (embedding size).
-            confweight(float):
-                The confidence weight for implicit feedback.
+            loss(str):
+                The loss function to use. Can be either ``'logistic'`` or ``'bpr'``.
             batch_size(int):
                 The number of users to use in each training batch.
             lr(float):
@@ -253,6 +284,7 @@ class TorchSampledMF(Predictor):
         """
         self.n_features = n_features
         self.batch_size = batch_size
+        self.loss = loss
         self.lr = lr
         self.epochs = epochs
         self.reg = reg
@@ -314,7 +346,13 @@ class TorchSampledMF(Predictor):
             # the model needs to be in training mode
             self._model.train(True)
             # set up loss function
-            self._loss = loss_logistic
+            match self.loss:
+                case 'logistic':
+                    self._loss = loss_logistic
+                case 'bpr':
+                    self._loss = loss_bpr
+                case _:
+                    raise ValueError(f'invalid loss {self.loss}')
             # set up optimizer
             self._opt = AdamW(self._model.parameters(), lr=self.lr, weight_decay=self.reg)
 

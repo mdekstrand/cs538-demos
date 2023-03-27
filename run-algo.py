@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Run an algorithm.
 
@@ -7,6 +8,8 @@ Usage:
 Options:
     -d DIR, --data=DIR
         Use data in DIR [default: data/ml-20m-split].
+    --tags DIR
+        Use tag data from DIR in addition to ratings.
     -p PFX, --prefix=PREFIX
         Prefix output dirs with PFX.
     -j N, --procs N
@@ -39,12 +42,12 @@ pred_base = Path('preds')
 rec_base = Path('recs')
 
 
-def run_algo(name, algo, want_preds, pfx, train, test, i):
+def run_algo(name, algo, want_preds, pfx, train, test, i, extra):
     # make a recommender
     algo = Recommender.adapt(algo)
 
     _log.info('training %s', name)
-    algo.fit(train)
+    algo.fit(train, **extra)
 
     dname = f'{pfx}-{name}' if pfx else name
 
@@ -91,10 +94,17 @@ def main():
         algo = algo_mod.default()
     want_preds = getattr(algo_mod, 'predicts_ratings', False)
 
+    extra = {}
+    tag_src = opts.get('--tags', None)
+    if tag_src:
+        _log.info('loading tags from %s', tag_src)
+        ml = MovieLens(tag_src)
+        extra['tags'] = ml.tags
+
     for i in range(start, 6):
         train = pd.read_parquet(f'{data}/part{i}-train.parquet')
         test = pd.read_parquet(f'{data}/part{i}-test.parquet')
-        run_algo(algo_name, algo, want_preds, opts['--prefix'], train, test, i)
+        run_algo(algo_name, algo, want_preds, opts['--prefix'], train, test, i, extra)
 
 
 if __name__ == '__main__':

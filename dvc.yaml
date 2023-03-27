@@ -68,28 +68,28 @@ stages:
       - preds/${item}-default-TorchMF
       - recs/${item}-default-TorchMF
 
-  default-imf1:
+  default-user-imf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchIMF1
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default UserIMF
       deps:
       - data/${item}-split
       outs:
-      - recs/${item}-default-TorchIMF1
+      - recs/${item}-default-UserIMF
 
-  default-lmf:
+  default-user-lmf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchLMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default UserLMF
       deps:
       - data/${item}-split
       outs:
-      - recs/${item}-default-TorchLMF
-    
+      - recs/${item}-default-UserLMF
+
   default-samp-lmf:
     foreach:
     - ml-latest-small
@@ -100,7 +100,7 @@ stages:
       - data/${item}-split
       outs:
       - recs/${item}-default-SampLMF
-  
+
   default-bpr:
     foreach:
     - ml-latest-small

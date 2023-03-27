@@ -288,3 +288,24 @@ stages:
       md5: 9807fb11d6769078c6fc2e3517449f79.dir
       size: 19079181
       nfiles: 5
+  default-tag-emf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      --tags data/ml-latest-small TagEMF
+    deps:
+    - path: data/ml-latest-small
+      md5: c4679a5c26767acd3f6d42cdf57bc0e7.dir
+      size: 3303135
+      nfiles: 5
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-default-TagEMF
+      md5: 7098d92069eb952a2f9b796cbc2b6169.dir
+      size: 69446
+      nfiles: 5
+    - path: recs/ml-latest-small-default-TagEMF
+      md5: 6646d2cf3ce4e9d83e218351a749f994.dir
+      size: 109645
+      nfiles: 5

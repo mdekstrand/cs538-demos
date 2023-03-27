@@ -5,6 +5,8 @@ Explicit-feedback matrix factorization with PyTorch.
 from scipy.stats import zipfian, loguniform, uniform, randint
 from lenskit.algorithms.als import BiasedMF
 
+predicts_ratings = True
+
 space = [
     # log-uniform (Zipf) distribution [5, 250]
     ('n_features', zipfian(1, 246, loc=4)),

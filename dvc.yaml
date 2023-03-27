@@ -56,17 +56,17 @@ stages:
       outs:
       - recs/${item}-default-LIFT
 
-  default-torchmf:
+  default-torchemf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchEMF
       deps:
       - data/${item}-split
       outs:
-      - preds/${item}-default-TorchMF
-      - recs/${item}-default-TorchMF
+      - preds/${item}-default-TorchEMF
+      - recs/${item}-default-TorchEMF
 
   default-user-imf:
     foreach:

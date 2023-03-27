@@ -309,3 +309,75 @@ stages:
       md5: 6646d2cf3ce4e9d83e218351a749f994.dir
       size: 109645
       nfiles: 5
+  default-tag-emf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default --tags data/ml-20m
+      TagEMF
+    deps:
+    - path: data/ml-20m
+      md5: c330ca8a1a4009f53451a8aeaa325d91.dir
+      size: 875588784
+      nfiles: 7
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-default-TagEMF
+      md5: 1d9e3b7120e6baf91a3d71da192d731e.dir
+      size: 11942179
+      nfiles: 5
+    - path: recs/ml-20m-default-TagEMF
+      md5: d3cedf59d2afa5e19ee7adc37a107c4f.dir
+      size: 20253293
+      nfiles: 5
+  default-bpr@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      BPR
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-BPR
+      md5: 345ccdaa9e74a772724d6058661ec25c.dir
+      size: 117338
+      nfiles: 5
+  default-imf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      I-MF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-I-MF
+      md5: bf8d7cfd70b8daac26344f2da1b6f0eb.dir
+      size: 168851
+      nfiles: 5
+  default-user-lmf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default UserLMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-UserLMF
+      md5: aca3ab584a631333e75c346ee2fca139.dir
+      size: 19094502
+      nfiles: 5
+  default-lift@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      LIFT
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-LIFT
+      md5: 83f1abcbd4dd9eae9d41b6efa7bfcf19.dir
+      size: 87773
+      nfiles: 5

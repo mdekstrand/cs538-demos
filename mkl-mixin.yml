@@ -1,2 +1,0 @@
-dependencies:
-- libblas=*=*mkl*  # [linux64]

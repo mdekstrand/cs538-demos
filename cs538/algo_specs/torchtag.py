@@ -3,7 +3,7 @@ Explicit-feedback matrix factorization with PyTorch.
 """
 
 from scipy.stats import zipfian, loguniform, uniform, randint
-from ..algorithms.torchmf import TorchMF
+from ..algorithms.torchtag import TorchTagMF
 
 predicts_ratings = True
 
@@ -16,7 +16,7 @@ space = [
 ]
 
 def default():
-    return TorchMF(50)
+    return TorchTagMF(50)
 
 def from_params(n_features, **kwargs):
-    return TorchMF(n_features, **kwargs)
+    return TorchTagMF(n_features, **kwargs)

@@ -1,10 +1,9 @@
-# gpu environment version 9, updated Mar. 27, 2023
-# note: pytorch is a relatively large download, at least on windows
+# windows gpu environment version 9, updated Mar. 27, 2023
+# note: pytorch is a relatively large download
 name: cs538-gpu
 channels:
-# - pytorch
+- pytorch
 - conda-forge
-# - anaconda
 dependencies:
 - python=3.10
 - pip

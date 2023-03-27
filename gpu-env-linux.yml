@@ -1,0 +1,32 @@
+# linux gpu environment version 9, updated Mar. 27, 2023
+# note: pytorch is a relatively large download, at least on windows
+name: cs538-gpu
+channels:
+- conda-forge
+dependencies:
+- python=3.10
+- pip
+- pandas>=1.2
+- polars>=0.16
+- pyarrow
+- scipy>=1.10
+- sympy>=1.11
+- tbb
+- lenskit>=0.14
+- scikit-learn>=1
+- tqdm
+- matplotlib
+- seaborn
+- notebook
+- papermill
+- jupyterlab
+- ipywidgets
+- docopt
+- dvc >=2.30
+- dvc-s3
+- pytorch=1.13=*cuda*
+# Torch only works on x86, use MKL
+- libblas=*=*mkl*
+platforms:
+- win-64
+- linux-64

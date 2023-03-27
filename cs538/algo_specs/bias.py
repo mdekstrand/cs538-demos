@@ -14,5 +14,5 @@ space = [
 def default():
     return Bias()
 
-def from_params(uprior, iprior, mrr=None):
+def from_params(uprior, iprior, **kwargs):
     return Bias(damping=(uprior, iprior))

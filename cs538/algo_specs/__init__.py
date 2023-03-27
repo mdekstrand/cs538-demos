@@ -1,5 +1,5 @@
 from . import pop, bias, lift
-from . import ials
+from . import ials, eals
 from . import torch_imf, torch_lmf, torch_lmf_samp, torch_bpr
 
 algorithms = {

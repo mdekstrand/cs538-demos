@@ -1,112 +1,112 @@
 stages:
-  run-pop:
+  default-pop:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} POP
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default POP
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-POP
 
-  run-bias:
+  default-bias:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} BIAS
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default BIAS
       deps:
       - data/${item}-split
       outs:
       - preds/${item}-BIAS
       - recs/${item}-BIAS
 
-  run-emf:
+  default-emf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} E-MF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default E-MF
       deps:
       - data/${item}-split
       outs:
       - preds/${item}-E-MF
       - recs/${item}-E-MF
   
-  run-imf:
+  default-imf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} I-MF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default I-MF
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-I-MF
   
-  run-lift:
+  default-lift:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} LIFT
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default LIFT
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-LIFT
 
-  run-torchmf:
+  default-torchmf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} TorchMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchMF
       deps:
       - data/${item}-split
       outs:
       - preds/${item}-TorchMF
       - recs/${item}-TorchMF
 
-  run-imf1:
+  default-imf1:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} TorchIMF1
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchIMF1
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-TorchIMF1
 
-  run-lmf:
+  default-lmf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} TorchLMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default TorchLMF
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-TorchLMF
     
-  run-samp-lmf:
+  default-samp-lmf:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} SampLMF
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default SampLMF
       deps:
       - data/${item}-split
       outs:
       - recs/${item}-SampLMF
   
-  run-bpr:
+  default-bpr:
     foreach:
     - ml-latest-small
     - ml-20m
     do:
-      cmd: python run-algo.py -d data/${item}-split -p ${item} BPR
+      cmd: python run-algo.py -d data/${item}-split -p ${item}-default BPR
       deps:
       - data/${item}-split
       outs:

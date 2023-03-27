@@ -16,6 +16,8 @@ Options:
         Tune on on partition PART [default: 1].
     -n N, --num-points=N
         Test N points in hyperparameter space [default: 60].
+    --rmse
+        Tune on RMSE instead of MRR.
     ALGO
         The algorithm to tune.
     DIR
@@ -40,6 +42,7 @@ import seedbank
 from cs538 import algo_specs
 
 _log = logging.getLogger('tune-algo')
+metric = 'MRR'
 
 
 def sample(space, state):
@@ -58,15 +61,18 @@ def evaluate(point):
     algo = Recommender.adapt(algo)
     algo.fit(train_data)
 
-    recs = batch.recommend(algo, test_users, 5000)
-    rla = topn.RecListAnalysis()
-    rla.add_metric(topn.recip_rank, k=5000)
-    scores = rla.compute(recs, test_data, include_missing=True)
-    mrr = scores['recip_rank'].fillna(0).mean()
-    return mrr
+    if metric == 'RMSE':
+
+    else:
+        recs = batch.recommend(algo, test_users, 5000)
+        rla = topn.RecListAnalysis()
+        rla.add_metric(topn.recip_rank, k=5000)
+        scores = rla.compute(recs, test_data, include_missing=True)
+        mrr = scores['recip_rank'].fillna(0).mean()
+        return mrr
 
 def main(args):
-    global algo_mod, train_data, test_data, test_users
+    global algo_mod, train_data, test_data, test_users, metric
     level = logging.DEBUG if args['--verbose'] else logging.INFO
     logging.basicConfig(level=level, stream=sys.stderr)
     logging.getLogger('numba').setLevel(logging.INFO)
@@ -97,22 +103,26 @@ def main(args):
     else:
         record = None
 
+    if args['--rmse']:
+        _log.info('scoring predictions on RMSE')
+        metric = 'RMSE'
+
     npts = int(args['--num-points'])
     _log.info('evaluating at %d points', npts)
     for i in range(npts):
         point = sample(algo_mod.space, state)
         _log.info('iter %d: %s', i + 1, point)
-        mrr = evaluate(point)
-        _log.info('iter %d: MRR=%0.4f', i + 1, mrr)
-        point['mrr'] = mrr
+        value = evaluate(point)
+        _log.info('iter %d: %s=%0.4f', i + 1, metric, value)
+        point[metric] = value
         points.append(point)
         if record:
             record.writerow(point)
             recfile.flush()
 
-    points = sorted(points, key=lambda p: p['mrr'], reverse=True)
+    points = sorted(points, key=lambda p: p[metric], reverse=(metric != 'RMSE'))
     best_point = points[0]
-    _log.info('finished in with MRR %.3f', best_point['mrr'])
+    _log.info('finished in with %s %.3f', metric, best_point[metric])
     for p, v in best_point.items():
         _log.info('best %s: %s', p, v)
 

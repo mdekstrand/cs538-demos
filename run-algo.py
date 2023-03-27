@@ -2,7 +2,7 @@
 Run an algorithm.
 
 Usage:
-    run-algo.py [options] ALGO...
+    run-algo.py [options] ALGO
 
 Options:
     -d DIR, --data=DIR
@@ -12,10 +12,13 @@ Options:
     -j N, --procs N
         Use N processes for prediction / recommendation.
     -v, --verbose
-        Use verbose logging
+        Use verbose logging.
     --first-part N
-        Start from partition N [default: 1]
+        Start from partition N [default: 1].
+    --params FILE
+        Load parameters from FILE.
 """
+import json
 import sys
 import logging
 from pathlib import Path
@@ -29,15 +32,14 @@ from lenskit.batch import predict, recommend
 from lenskit.util import clone
 from lenskit.algorithms import Recommender
 
-from algo_defs import algorithms, pred_algos
+from cs538.algo_specs import algorithms
 
 _log = logging.getLogger('run-algo')
 pred_base = Path('preds')
 rec_base = Path('recs')
 
 
-def run_algo(name, pfx, train, test, i):
-    algo = algorithms[name]
+def run_algo(name, algo, want_preds, pfx, train, test, i):
     # make a recommender
     algo = Recommender.adapt(algo)
 
@@ -46,7 +48,7 @@ def run_algo(name, pfx, train, test, i):
 
     dname = f'{pfx}-{name}' if pfx else name
 
-    if name in pred_algos:
+    if want_preds:
         _log.info('generating predictions')
         preds = predict(algo, test, n_jobs=n_jobs)
         err = rmse(preds['prediction'], preds['rating'])
@@ -77,11 +79,22 @@ def main():
     if n_jobs:
         n_jobs = int(n_jobs)
 
+    algo_name = opts['ALGO']
+    _log.info('using algorithm %s', algo_name)
+    algo_mod = algorithms[algo_name]
+    pfn = opts.get('--params', None)
+    if pfn:
+        _log.info('using parameters from %s')
+        params = json.loads(Path(pfn).read_text())
+        algo = algo_mod.from_params(**params)
+    else:
+        algo = algo_mod.default()
+    want_preds = getattr(algo_mod, 'predicts_ratings', False)
+
     for i in range(start, 6):
         train = pd.read_parquet(f'{data}/part{i}-train.parquet')
         test = pd.read_parquet(f'{data}/part{i}-test.parquet')
-        for algo in opts['ALGO']:
-            run_algo(algo, opts['--prefix'], train, test, i)
+        run_algo(algo_name, algo, want_preds, opts['--prefix'], train, test, i)
 
 
 if __name__ == '__main__':

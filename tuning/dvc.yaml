@@ -1,0 +1,99 @@
+stages:
+  tune-bias:
+    cmd: python tune-algo.py -r tuning/ml-20m-BIAS.csv -o tuning/ml-20m-BIAS.json --rmse BIAS data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-BIAS.csv
+    - tuning/ml-20m-BIAS.json
+
+  tune-emf:
+    cmd: python tune-algo.py -r tuning/ml-20m-E-MF.csv -o tuning/ml-20m-E-MF.json --rmse E-MF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-E-MF.csv
+    - tuning/ml-20m-E-MF.json
+
+  tune-imf:
+    cmd: python tune-algo.py -r tuning/ml-20m-I-MF.csv -o tuning/ml-20m-I-MF.json I-MF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-I-MF.csv
+    - tuning/ml-20m-I-MF.json
+
+  tune-torchemf:
+    cmd: python tune-algo.py -r tuning/ml-20m-TorchEMF.csv -o tuning/ml-20m-TorchEMF.json --rmse TorchEMF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-TorchEMF.csv
+    - tuning/ml-20m-TorchEMF.json
+
+  tune-user-imf:
+    cmd: python tune-algo.py -r tuning/ml-20m-UserIMF.csv -o tuning/ml-20m-UserIMF.json UserIMF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-UserIMF.csv
+    - tuning/ml-20m-UserIMF.json
+
+  tune-user-lmf:
+    cmd: python tune-algo.py -r tuning/ml-20m-UserLMF.csv -o tuning/ml-20m-UserLMF.json UserLMF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-UserLMF.csv
+    - tuning/ml-20m-UserLMF.json
+
+  tune-samp-lmf:
+    cmd: python tune-algo.py -r tuning/ml-20m-SampLMF.csv -o tuning/ml-20m-SampLMF.json SampLMF data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-SampLMF.csv
+    - tuning/ml-20m-SampLMF.json
+
+  tune-bpr:
+    cmd: python tune-algo.py -r tuning/ml-20m-BPR.csv -o tuning/ml-20m-BPR.json BPR data/ml-20m-split
+    wdir: ..
+    params:
+    - random.seed
+    deps:
+    - data/${item}-split
+    outs:
+    - tuning/ml-20m-BPR.csv
+    - tuning/ml-20m-BPR.json
+
+  # tune-tag-emf:
+  #   cmd: python tune-algo.py -o ml-20m---.json --tags data/${item} TagEMF data/ml-20m-split
+  #   wdir: ..
+  # params:
+  # - random.seed
+  #   deps:
+  #   - data/${item}-split
+  #   - data/${item}
+  #   outs:
+  #   - recs/${item}-default-TagEMF

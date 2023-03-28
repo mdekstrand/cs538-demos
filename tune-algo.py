@@ -21,7 +21,7 @@ Options:
     ALGO
         The algorithm to tune.
     DIR
-        The test data directoryl
+        The test data directory
 """
 
 import sys
@@ -36,6 +36,7 @@ import pandas as pd
 import numpy as np
 
 from lenskit import batch, topn
+from lenskit.metrics.predict import rmse
 from lenskit.algorithms import Recommender
 import seedbank
 
@@ -58,12 +59,16 @@ def evaluate(point):
     algo = algo_mod.from_params(**point)
     _log.info('evaluating %s', algo)
 
-    algo = Recommender.adapt(algo)
-    algo.fit(train_data)
-
     if metric == 'RMSE':
-
+        algo.fit(train_data)
+        preds = batch.predict(algo, test_data)
+        errs = preds['prediction'] - preds['rating']
+        # assume missing values are completely off (5 star difference)
+        errs = errs.fillna(5)
+        return np.mean(np.square(errs))
     else:
+        algo = Recommender.adapt(algo)
+        
         recs = batch.recommend(algo, test_users, 5000)
         rla = topn.RecListAnalysis()
         rla.add_metric(topn.recip_rank, k=5000)

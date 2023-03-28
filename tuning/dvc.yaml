@@ -5,7 +5,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-BIAS.csv
     - tuning/ml-20m-BIAS.json
@@ -16,7 +16,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-E-MF.csv
     - tuning/ml-20m-E-MF.json
@@ -27,7 +27,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-I-MF.csv
     - tuning/ml-20m-I-MF.json
@@ -38,7 +38,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-TorchEMF.csv
     - tuning/ml-20m-TorchEMF.json
@@ -49,7 +49,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-UserIMF.csv
     - tuning/ml-20m-UserIMF.json
@@ -60,7 +60,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-UserLMF.csv
     - tuning/ml-20m-UserLMF.json
@@ -71,7 +71,7 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-SampLMF.csv
     - tuning/ml-20m-SampLMF.json
@@ -82,18 +82,18 @@ stages:
     params:
     - random.seed
     deps:
-    - data/${item}-split
+    - data/ml-20m-split
     outs:
     - tuning/ml-20m-BPR.csv
     - tuning/ml-20m-BPR.json
 
   # tune-tag-emf:
-  #   cmd: python tune-algo.py -o ml-20m---.json --tags data/${item} TagEMF data/ml-20m-split
+  #   cmd: python tune-algo.py -o ml-20m---.json --tags data/ml-20m TagEMF data/ml-20m-split
   #   wdir: ..
   # params:
   # - random.seed
   #   deps:
-  #   - data/${item}-split
-  #   - data/${item}
+  #   - data/ml-20m-split
+  #   - data/ml-20m
   #   outs:
   #   - recs/${item}-default-TagEMF

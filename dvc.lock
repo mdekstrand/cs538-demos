@@ -302,12 +302,12 @@ stages:
       nfiles: 10
     outs:
     - path: preds/ml-latest-small-default-TagEMF
-      md5: 7098d92069eb952a2f9b796cbc2b6169.dir
-      size: 69446
+      md5: e3c04dbec873fd54fae1e5109ee35318.dir
+      size: 69442
       nfiles: 5
     - path: recs/ml-latest-small-default-TagEMF
-      md5: 6646d2cf3ce4e9d83e218351a749f994.dir
-      size: 109645
+      md5: f0ef6d860b457ff9283330cf4fb5dd09.dir
+      size: 109677
       nfiles: 5
   default-tag-emf@ml-20m:
     cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default --tags data/ml-20m
@@ -380,4 +380,227 @@ stages:
     - path: recs/ml-latest-small-default-LIFT
       md5: 83f1abcbd4dd9eae9d41b6efa7bfcf19.dir
       size: 87773
+      nfiles: 5
+  default-bpr@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default BPR
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-BPR
+      md5: 03bb99531e43f7d130279ad2772f3a5a.dir
+      size: 19079127
+      nfiles: 5
+  default-user-lmf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      UserLMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-UserLMF
+      md5: 5a9699a37b70e605c40a669f120dbf6f.dir
+      size: 103109
+      nfiles: 5
+  default-bias@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default BIAS
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-default-BIAS
+      md5: 0fadbdcb0da031e6e4c33606914f9ea3.dir
+      size: 14608296
+      nfiles: 5
+    - path: recs/ml-20m-default-BIAS
+      md5: 63edd18a34ea8f23af05e002574017e2.dir
+      size: 2676515
+      nfiles: 5
+  default-torchemf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      TorchEMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-default-TorchEMF
+      md5: 77299aeff8953f0325401128bc63b385.dir
+      size: 69446
+      nfiles: 5
+    - path: recs/ml-latest-small-default-TorchEMF
+      md5: 91eb5a88b7245da97ba228fc02ba66b0.dir
+      size: 103852
+      nfiles: 5
+  default-pop@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default POP
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-POP
+      md5: c2e811ff2211b2e2895f5c06660d8081.dir
+      size: 4765462
+      nfiles: 5
+  default-emf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default E-MF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-default-E-MF
+      md5: 98492ef8f358281c9b84ef5059a9e742.dir
+      size: 14664304
+      nfiles: 5
+    - path: recs/ml-20m-default-E-MF
+      md5: e16d15434e3f324d6bad11d6d701c96e.dir
+      size: 28494045
+      nfiles: 5
+  default-imf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default I-MF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-I-MF
+      md5: d0d6e311c225c99d979093ee7beb413c.dir
+      size: 29229379
+      nfiles: 5
+  default-samp-lmf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      SampLMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-SampLMF
+      md5: 7217c9243e0aac1cb2e0e3a12f340837.dir
+      size: 117257
+      nfiles: 5
+  default-samp-lmf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default SampLMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-SampLMF
+      md5: 87ec15eaadaf507248eb14a5a0b6f4f5.dir
+      size: 19431114
+      nfiles: 5
+  default-user-imf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      UserIMF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-UserIMF
+      md5: ae10926429e879b941b541c21195ef38.dir
+      size: 102985
+      nfiles: 5
+  default-bias@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      BIAS
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-default-BIAS
+      md5: 43d4afe5f1d4fa19505c5eecebd58be8.dir
+      size: 81883
+      nfiles: 5
+    - path: recs/ml-latest-small-default-BIAS
+      md5: 699eca084e96ce8302e8c3325b213ef6.dir
+      size: 27414
+      nfiles: 5
+  default-lift@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default LIFT
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-LIFT
+      md5: de21a5c1988661d69e0b84bc43a66682.dir
+      size: 17883756
+      nfiles: 5
+  default-torchemf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default TorchEMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: preds/ml-20m-default-TorchEMF
+      md5: 4575e0b1b534c5575aca1a2079ce0326.dir
+      size: 11941837
+      nfiles: 5
+    - path: recs/ml-20m-default-TorchEMF
+      md5: b7a6d112c5c2f733572ba3e98ae93af7.dir
+      size: 19777273
+      nfiles: 5
+  default-emf@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      E-MF
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: preds/ml-latest-small-default-E-MF
+      md5: 798fd357931c266770a14f787a22dc89.dir
+      size: 81690
+      nfiles: 5
+    - path: recs/ml-latest-small-default-E-MF
+      md5: 7862327424342f4666e97a1073920f87.dir
+      size: 163647
+      nfiles: 5
+  default-user-imf@ml-20m:
+    cmd: python run-algo.py -d data/ml-20m-split -p ml-20m-default UserIMF
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    outs:
+    - path: recs/ml-20m-default-UserIMF
+      md5: aa083159d7bf146adbd583a5c8144723.dir
+      size: 18738607
+      nfiles: 5
+  default-pop@ml-latest-small:
+    cmd: python run-algo.py -d data/ml-latest-small-split -p ml-latest-small-default
+      POP
+    deps:
+    - path: data/ml-latest-small-split
+      md5: 80a2dd7a24400ecc193edda5e350054d.dir
+      size: 4170563
+      nfiles: 10
+    outs:
+    - path: recs/ml-latest-small-default-POP
+      md5: e08fb1e012ac3111a0db527a9ec2817e.dir
+      size: 41041
       nfiles: 5

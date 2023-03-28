@@ -1,0 +1,20 @@
+schema: '2.0'
+stages:
+  tune-bias:
+    cmd: python tune-algo.py -r tuning/ml-20m-BIAS.csv -o tuning/ml-20m-BIAS.json
+      --rmse BIAS data/ml-20m-split
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    params:
+      params.yaml:
+        random.seed: 20230309
+    outs:
+    - path: tuning/ml-20m-BIAS.csv
+      md5: 2f2fde1a82c0fbf1920e13ca75dd431e
+      size: 3662
+    - path: tuning/ml-20m-BIAS.json
+      md5: 5765a53b4c4689d2f9c9ac6a28a9baa1
+      size: 89

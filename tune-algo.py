@@ -97,20 +97,20 @@ def main(args):
 
     state = seedbank.numpy_random_state()
 
+    if args['--rmse']:
+        _log.info('scoring predictions on RMSE')
+        metric = 'RMSE'
+
     points = []
     record_fn = args['--record']
     if record_fn:
         rcols = [name for (name, _dist) in algo_mod.space]
-        rcols.append('mrr')
+        rcols.append(metric)
         recfile = open(record_fn, 'w')
         record = csv.DictWriter(recfile, rcols)
         record.writeheader()
     else:
         record = None
-
-    if args['--rmse']:
-        _log.info('scoring predictions on RMSE')
-        metric = 'RMSE'
 
     npts = int(args['--num-points'])
     _log.info('evaluating at %d points', npts)

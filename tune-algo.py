@@ -68,7 +68,7 @@ def evaluate(point):
         return np.mean(np.square(errs))
     else:
         algo = Recommender.adapt(algo)
-        
+        algo.fit(train_data)
         recs = batch.recommend(algo, test_users, 5000)
         rla = topn.RecListAnalysis()
         rla.add_metric(topn.recip_rank, k=5000)

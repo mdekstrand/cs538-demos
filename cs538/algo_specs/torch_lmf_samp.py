@@ -8,7 +8,6 @@ from ..algorithms.torchmfsamp import TorchSampledMF
 space = [
     # log-uniform (Zipf) distribution [5, 250]
     ('n_features', zipfian(1, 246, loc=4)),
-    ('confweight', uniform(1, 1000)),
     ('reg', loguniform(1.0e-6, 10)),
     ('lr', loguniform(1.0e-6, 1)),
     ('epochs', randint(5, 20)),

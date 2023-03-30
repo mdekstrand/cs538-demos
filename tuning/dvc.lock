@@ -18,3 +18,21 @@ stages:
     - path: tuning/ml-20m-BIAS.json
       md5: 5765a53b4c4689d2f9c9ac6a28a9baa1
       size: 89
+  tune-emf:
+    cmd: python tune-algo.py -r tuning/ml-20m-E-MF.csv -o tuning/ml-20m-E-MF.json
+      --rmse E-MF data/ml-20m-split
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    params:
+      params.yaml:
+        random.seed: 20230309
+    outs:
+    - path: tuning/ml-20m-E-MF.csv
+      md5: 8124193cf08cba36b8585e3d9aa17869
+      size: 6640
+    - path: tuning/ml-20m-E-MF.json
+      md5: c1671b30882723325407101c82f90677
+      size: 186

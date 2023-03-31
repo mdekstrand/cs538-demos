@@ -2,3 +2,4 @@
 *.parquet
 *.log
 *.out
+*.lprof

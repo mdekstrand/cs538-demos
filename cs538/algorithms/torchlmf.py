@@ -226,12 +226,13 @@ class TorchLogisticMF(Predictor):
             # convert rows to tensor, and reshape
             # (B, 1) will broadcast with the (B, |I|) item index vector
             uv = torch.IntTensor(rows).reshape((-1, 1, 1))
-            rv = torch.zeros_like(ivt, dtype=torch.float32)
+            # rv = torch.zeros_like(ivt, dtype=torch.float32)
+            rv = np.zeros((cur_size, 1, ni), dtype='float32')
             for j, row in enumerate(rows):
                 rv[j, 0, self.matrix_.row_cs(row)] = 1
 
             uv = uv.to(self._current_device)
-            rv = rv.to(self._current_device)
+            rv = torch.from_numpy(rv).to(self._current_device)
 
             # compute scores and loss
             pred = self._model(uv, ivt)
@@ -249,7 +250,7 @@ class TorchLogisticMF(Predictor):
             loss.backward()
             self._opt.step()
 
-            _log.debug('batch %d has loss %s', i, loss.item())
+            # _log.debug('batch %d has loss %s', i, loss.item())
         
         loop.clear()
         

@@ -237,7 +237,7 @@ class TorchImplicitMFUserMSE(Predictor):
             loss.backward()
             self._opt.step()
 
-            _log.debug('batch %d has loss %s', i, loss.item())
+            # _log.debug('batch %d has loss %s', i, loss.item())
         
         loop.clear()
         

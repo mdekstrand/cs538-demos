@@ -395,7 +395,8 @@ class TorchSampledMF(Predictor):
             loss.backward()
             self._opt.step()
 
-            _log.debug('batch %d has NLL %s', i, loss.item())
+            if i % 100 == 99:
+                _log.debug('batch %d has NLL %s', i, loss.item())
         
         loop.clear()
         

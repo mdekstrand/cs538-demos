@@ -36,3 +36,21 @@ stages:
     - path: tuning/ml-20m-E-MF.json
       md5: c1671b30882723325407101c82f90677
       size: 186
+  tune-torchemf:
+    cmd: python tune-algo.py -r tuning/ml-20m-TorchEMF.csv -o tuning/ml-20m-TorchEMF.json
+      --rmse TorchEMF data/ml-20m-split
+    deps:
+    - path: data/ml-20m-split
+      md5: b0cd4681f50b4e11c4ba40d36e71f351.dir
+      size: 647220813
+      nfiles: 10
+    params:
+      params.yaml:
+        random.seed: 20230309
+    outs:
+    - path: tuning/ml-20m-TorchEMF.csv
+      md5: f7824e0ac553f6751c9c27b70cc35e4a
+      size: 4107
+    - path: tuning/ml-20m-TorchEMF.json
+      md5: 527cdfea1566fa3ed337931b6b54a2ae
+      size: 115

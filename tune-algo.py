@@ -129,7 +129,7 @@ def main(args):
     npts = int(args['--num-points'])
     _log.info('evaluating at %d points', npts)
     points = [sample(algo_mod.space, state) for i in range(npts)]
-    with invoker(ctx, evaluate) as worker:
+    with invoker(ctx, evaluate, 1) as worker:
         vals = worker.map(algo_mod.from_params(**point) for point in points)
         for val, point in zip(vals, points):
             _log.info('%s: %s=%.4f', point, ctx.metric, val)

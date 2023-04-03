@@ -93,7 +93,7 @@ class TorchLogisticMF(Predictor):
     _configured_device = None
     _current_device = None
 
-    def __init__(self, n_features, *, confweight=100, batch_size=16, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
+    def __init__(self, n_features, *, confweight=100, batch_size=64, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
         """
         Initialize the Torch MF predictor.
 
@@ -231,8 +231,9 @@ class TorchLogisticMF(Predictor):
             for j, row in enumerate(rows):
                 rv[j, 0, self.matrix_.row_cs(row)] = 1
 
+            rv = torch.from_numpy(rv)
+            rv = rv.to(self._current_device)
             uv = uv.to(self._current_device)
-            rv = torch.from_numpy(rv).to(self._current_device)
 
             # compute scores and loss
             pred = self._model(uv, ivt)

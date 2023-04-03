@@ -92,7 +92,7 @@ class TorchImplicitMFUserMSE(Predictor):
     _configured_device = None
     _current_device = None
 
-    def __init__(self, n_features, *, confweight=40, batch_size=8, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
+    def __init__(self, n_features, *, confweight=40, batch_size=64, lr=0.001, epochs=5, reg=0.01, device=None, rng_spec=None):
         """
         Initialize the Torch MF predictor.
 

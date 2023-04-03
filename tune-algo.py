@@ -36,9 +36,8 @@ import pandas as pd
 import numpy as np
 
 from lenskit import batch, topn
-from lenskit.metrics.predict import rmse
 from lenskit.algorithms import Recommender
-from lenskit.util.parallel import invoker, is_mp_worker
+from lenskit.util.parallel import is_mp_worker
 import seedbank
 
 from cs538 import algo_specs
@@ -68,8 +67,9 @@ def sample(space, state):
     }
 
 
-def evaluate(ctx: TuneContext, algo):
+def evaluate(ctx: TuneContext, point):
     "Evaluate an algorithm."
+    algo = algo_mod.from_params(**point)
     _log.info('evaluating %s', algo)
 
     if ctx.metric == 'RMSE':
@@ -91,6 +91,7 @@ def evaluate(ctx: TuneContext, algo):
 
 
 def main(args):
+    global algo_mod
     level = logging.DEBUG if args['--verbose'] else logging.INFO
     logging.basicConfig(level=level, stream=sys.stderr)
     logging.getLogger('numba').setLevel(logging.INFO)
@@ -128,15 +129,15 @@ def main(args):
 
     npts = int(args['--num-points'])
     _log.info('evaluating at %d points', npts)
-    points = [sample(algo_mod.space, state) for i in range(npts)]
-    with invoker(ctx, evaluate, 1) as worker:
-        vals = worker.map(algo_mod.from_params(**point) for point in points)
-        for val, point in zip(vals, points):
-            _log.info('%s: %s=%.4f', point, ctx.metric, val)
-            point[ctx.metric] = val
-            if record:
-                record.writerow(point)
-                recfile.flush()
+    for i in range(npts):
+        point = sample(algo_mod.space, state)
+        _log.info('point %d: %s', i, point)
+        val = evaluate(ctx, point)
+        _log.info('%s: %s=%.4f', point, ctx.metric, val)
+        point[ctx.metric] = val
+        if record:
+            record.writerow(point)
+            recfile.flush()
 
     points = sorted(points, key=lambda p: p[ctx.metric], reverse=(ctx.metric != 'RMSE'))
     best_point = points[0]

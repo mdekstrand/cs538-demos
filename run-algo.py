@@ -34,12 +34,18 @@ from lenskit.metrics.predict import rmse
 from lenskit.batch import predict, recommend
 from lenskit.util import clone
 from lenskit.algorithms import Recommender
+from lenskit.util.parallel import is_mp_worker
 
 from cs538.algo_specs import algorithms
 
 _log = logging.getLogger('run-algo')
 pred_base = Path('preds')
 rec_base = Path('recs')
+
+if is_mp_worker():
+    # disable torch threading in worker proceses
+    import torch
+    torch.set_num_threads(1)
 
 
 def run_algo(name, algo, want_preds, pfx, train, test, i, extra):

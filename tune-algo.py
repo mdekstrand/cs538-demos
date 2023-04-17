@@ -155,11 +155,10 @@ def main(args):
         _log.info('point %d: %s', i, point)
         if args['--points-only']:
             continue
-        
+
         res = evaluate(ctx, point)
-        val = res[ctx.metric]
-        _log.info('%s: %s=%.4f', point, ctx.metric, val)
-        point.update(val)
+        _log.info('%s: %s=%.4f', point, ctx.metric, res[ctx.metric])
+        point.update(res)
         if record:
             record.writerow(point)
             recfile.flush()

@@ -18,6 +18,8 @@ Options:
         Test N points in hyperparameter space [default: 60].
     --rmse
         Tune on RMSE instead of MRR.
+    --points-only
+        Print the points that would be used, without testing.
     ALGO
         The algorithm to tune.
     DIR
@@ -38,6 +40,7 @@ import numpy as np
 from lenskit import batch, topn
 from lenskit.algorithms import Recommender
 from lenskit.util.parallel import is_mp_worker
+from lenskit.util import Stopwatch
 import seedbank
 
 from cs538 import algo_specs
@@ -73,21 +76,39 @@ def evaluate(ctx: TuneContext, point):
     _log.info('evaluating %s', algo)
 
     if ctx.metric == 'RMSE':
+        ttime = Stopwatch()
         algo.fit(ctx.train_data)
+        ttime.stop()
+        _log.info('trained model in %s', ttime)
+
+        rtime = Stopwatch()
         preds = batch.predict(algo, ctx.test_data)
+        rtime.stop()
+
         errs = preds['prediction'] - preds['rating']
         # assume missing values are completely off (5 star difference)
         errs = errs.fillna(5)
-        return np.mean(np.square(errs))
+        val = np.mean(np.square(errs))
     else:
         algo = Recommender.adapt(algo)
+        ttime = Stopwatch()
         algo.fit(ctx.train_data)
+        ttime.stop()
+        _log.info('trained model in %s', ttime)
+
+        rtime = Stopwatch()
         recs = batch.recommend(algo, ctx.test_users, 5000)
+        rtime.stop()
         rla = topn.RecListAnalysis()
         rla.add_metric(topn.recip_rank, k=5000)
         scores = rla.compute(recs, ctx.test_data, include_missing=True)
-        mrr = scores['recip_rank'].fillna(0).mean()
-        return mrr
+        val = scores['recip_rank'].fillna(0).mean()
+    
+    return {
+        ctx.metric: val,
+        'TrainTime': ttime.elapsed(),
+        'RunTime': rtime.elapsed(),
+    }
 
 
 def main(args):
@@ -120,7 +141,7 @@ def main(args):
     record_fn = args['--record']
     if record_fn:
         rcols = [name for (name, _dist) in algo_mod.space]
-        rcols.append(ctx.metric)
+        rcols += [ctx.metric, 'TrainTime', 'RunTime']
         recfile = open(record_fn, 'w')
         record = csv.DictWriter(recfile, rcols)
         record.writeheader()
@@ -132,9 +153,13 @@ def main(args):
     for i in range(npts):
         point = sample(algo_mod.space, state)
         _log.info('point %d: %s', i, point)
-        val = evaluate(ctx, point)
+        if args['--points-only']:
+            continue
+        
+        res = evaluate(ctx, point)
+        val = res[ctx.metric]
         _log.info('%s: %s=%.4f', point, ctx.metric, val)
-        point[ctx.metric] = val
+        point.update(val)
         if record:
             record.writerow(point)
             recfile.flush()

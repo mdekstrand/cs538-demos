@@ -26,6 +26,7 @@ dependencies:
 - docopt
 - dvc >=2.30
 - dvc-s3
+- dvc-webdav
 - pytorch=1.13=*cpu*
 platforms:
 - win-64
